@@ -44,6 +44,7 @@ const Detaibooking = (props) => {
           ...formData,
           services: {serviceId: service._id, price: service.price },
           bookingPrice: service.price,
+          status: 0
         });
         message.success("Đặt lịch thành công", 2);
         navigate("/");

@@ -1,67 +1,72 @@
+import React, { useState, useEffect } from "react";
 import { Button, message, Select, Space, Table } from "antd";
 
 import { Option } from "antd/lib/mentions";
-import React, { useState } from "react";
-import { useEffect } from "react";
-
 import { Link } from "react-router-dom";
-import { getPosts, removePost } from "../../../api/post";
-const ListPost = () => {
-  const [posts, setPosts] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+import { ListVouchers, DeleteVoucher } from "../../../api/voucher";
+import moment from "moment";
+const ListVoucher = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [vouchers, setVouchers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const onRemove = async (id) => {
-    const confirm = window.confirm("Bạn muốn xóa banner không ?");
+
+  const handleRemove = async (id) => {
+    const confirm = window.confirm("Bạn muốn xóa voucher này không?");
     if (confirm) {
-      console.log("sldas", id);
-      await removePost(id);
-      setPosts(posts.filter((item) => item._id !== id));
-      console.log(posts);
-      message.success("Xóa thành công");
+      await DeleteVoucher(id);
+      setVouchers(vouchers.filter((item) => item._id !== id));
+      message.success("Xóa voucher thành công!");
     }
   };
+
   const columns = [
     {
-      title: "Tiêu đề",
-      dataIndex: "title",
-      key: "title",
+      title: "Tên voucher",
+      dataIndex: "name",
+      key: "name",
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Hình ảnh",
-      dataIndex: "thumbnail",
-      key: "thumbnail",
-      render: (thumbnail) => {
-        return (
-          <img
-            src={thumbnail}
-            alt="thumbnail"
-            style={{ width: "100px", height: "100px" }}
-          />
-        );
-      },
+      title: "Mã voucher",
+      dataIndex: "code",
+      key: "code",
     },
     {
-      title: "Mô tả",
-      dataIndex: "shortDescription",
-      key: "shortDescription",
-      render: (shortDescription) => {
-        return <p>{shortDescription}</p>;
-      },
+      title: "Giảm giá",
+      dataIndex: "discount",
+      key: "discount",
+    },
+
+    {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+
+    {
+      title: "Dịch vụ",
+      dataIndex: "service",
+      key: "service",
+      render: item => <span>{item.name}</span>
+    },
+
+    {
+      title: "Ngày hết hạn",
+      dataIndex: "expirationDate",
+      key: "expirationDate",
+      render : item => <span>{moment(item).format('DD/MM/YYYY')}</span>
     },
 
     {
       title: "Hành động",
       dataIndex: "_id",
       key: "action",
-      colapse: 2,
       render: (_, item) => {
         // Thêm
-
         return (
           <div className="text-center">
             <Space size="middle">
@@ -77,14 +82,14 @@ const ListPost = () => {
                     type="primary"
                     style={{ border: "none", color: "white", width: "100%" }}
                   >
-                    <Link to={`/admin/post/${item.slug}/edit`}>Sửa</Link>
+                    <Link to={`/admin/voucher/update/${item._id}`}>Sửa</Link>
                   </Button>
                 </Option>
                 <Option>
                   {" "}
                   <Button
                     onClick={() => {
-                      onRemove(item._id);
+                      handleRemove(item._id);
                     }}
                     type="danger"
                     style={{ border: "none", color: "white", width: "100%" }}
@@ -116,33 +121,34 @@ const ListPost = () => {
       },
     },
   ];
+
   useEffect(() => {
-    const getPost = async () => {
-      const res = await getPosts();
-      setPosts(res);
+    const getVoucher = async () => {
+      const res = await ListVouchers();
+      setVouchers(res);
     };
-    getPost();
+    getVoucher();
   }, [loading]);
   return (
     <>
       <div className="w-full px-6 py-6 mx-auto ">
         <div>
-          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px] ">
-            <div>Danh sách tin tức</div>
+          <h1 className="m-auto text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px] ">
+            <div>Danh sách Voucher</div>
           </h1>
         </div>
         <div className="">
-          <Link to={"/admin/post/add"}>
-            <Button>+ Thêm tin tức</Button>
+          <Link to={"/admin/voucher/add"}>
+            <Button>+ Thêm Voucher</Button>
           </Link>
         </div>
       </div>
 
       <div className="w-full px-6 py-6 mx-auto  ">
-        <Table columns={columns} dataSource={posts} />
+        <Table columns={columns} dataSource={vouchers} />
       </div>
     </>
   );
 };
 
-export default ListPost;
+export default ListVoucher;

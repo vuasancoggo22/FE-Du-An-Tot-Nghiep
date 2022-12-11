@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-import { Button, DatePicker } from "antd";
+import { Button, DatePicker, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import { httpGetAll } from "../../api/booking";
@@ -406,15 +406,19 @@ const Dashboard = () => {
     getServicesStatistic();
 
     const getAccount = async () => {
-      const res = await userAccountStatistics();
+      const res = await userAccountStatistics();message.error
       await setaccCount(res);
     };
     getAccount();
 
     const getEmployee = async () => {
-      const res = await employeeOrderStatistics(undefined, undefined);
-      console.log(res);
-      setEmployees(res); 
+      try {
+        const res = await employeeOrderStatistics(undefined, undefined);
+        setEmployees(res); 
+      } catch (error) {
+        message.error(`${error.response.data.message}`);
+      }
+      
     };
     getEmployee();
 

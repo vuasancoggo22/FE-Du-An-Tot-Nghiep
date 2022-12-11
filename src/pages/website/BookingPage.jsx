@@ -106,11 +106,15 @@ const BookingPage = () => {
       const result = await confirmationResult.confirm(otp);
       const token = result._tokenResponse.idToken;
       console.log(token);
-      const response = await httpAddBooking(token, {
-        ...formValues,
-        services: servicePicked,
-        bookingPrice,
-      });
+      const response = await httpAddBooking(
+        token,
+        {
+          ...formValues,
+          services: servicePicked,
+          bookingPrice,
+        },
+        user.id
+      );
       const newNotification = {
         id: response._id,
         type: "admin",

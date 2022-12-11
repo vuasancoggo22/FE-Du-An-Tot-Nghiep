@@ -8,13 +8,13 @@ const bookingGenderStatistics = () => {
   const url = `booking-gender-statistics`
   return instance.get(url);
 };
-const httpAddBooking = (token, data) => {
+const httpAddBooking = (token, data,userId) => {
   const header = {
     headers: {
       Authorization: `${token}`,
     },
   };
-  return instance.post(`booking`, data, header);
+  return instance.post(`booking?user=${userId}`, data, header);
 };
 const bookingAddByEmployeeApi = (data) => {
   return instance.post(`bookingAddByEmployee`, data); 

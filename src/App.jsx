@@ -68,6 +68,9 @@ import { message } from "antd";
 
 import ChangePass from "./components/clients/ChangePass";
 import Swal from "sweetalert2";
+import ListVoucher from "./pages/admin/voucher";
+import AddVoucher from "./pages/admin/voucher/add";
+import EditVoucher from "./pages/admin/voucher/edit";
 
 function App() {
   const [isConnected, setIsConnected] = useState(null);
@@ -87,6 +90,8 @@ function App() {
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
   const [countDown, setCountDown] = useState("");
+  const [employeeId, setEmployeeId] = useState();
+  const [bookingId, setBookingId] = useState();
 
   window.addEventListener("unload", () => {
     if (countDown > 0) {
@@ -106,6 +111,10 @@ function App() {
       }
     }, 1000);
   };
+  const handleToEmployee = (data, bookingId) => {
+    setEmployeeId(data)
+    setBookingId(bookingId)
+  }
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -176,9 +185,15 @@ function App() {
             <Route path="/news" element={<News />} />
             <Route path="/news/detail/:id" element={<DetailNews />} />
             <Route path="/price-list" element={<PriceList />} />
-            <Route path="/detail-booking/:id" element={<Detaibooking countDown={countDown}
-              handleSetCountDown={handleSetCountDown}
-            />} />
+            <Route
+              path="/detail-booking/:id"
+              element={
+                <Detaibooking
+                  countDown={countDown}
+                  handleSetCountDown={handleSetCountDown}
+                />
+              }
+            />
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
@@ -204,6 +219,7 @@ function App() {
                 element={
                   <PrivateRouter2>
                     <ListBooking
+                      handleToEmployee={handleToEmployee}
                       handleChangeStatus={changeStatusBooking}
                       dataBooking={booking}
                       dataEmployy={employees}
@@ -216,9 +232,11 @@ function App() {
                 path="employee"
                 element={
                   <ListBookingByEmployee
+                    dataAdminLogin={employeeId}
                     handleChangeStatus={changeStatusBooking}
                     dataBooking={booking}
                     dataEmployy={employees}
+                    dataBookingId={bookingId}
                     dataService={service}
                   />
                 }
@@ -271,6 +289,20 @@ function App() {
                 }
               />
             </Route>
+
+            <Route path="voucher">
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ListVoucher />
+                  </PrivateRouter2>
+                }
+              />
+              <Route path="add" element={<AddVoucher />} />
+              <Route path="update/:id" element={<EditVoucher />} />
+            </Route>
+
             <Route path="user">
               <Route
                 index

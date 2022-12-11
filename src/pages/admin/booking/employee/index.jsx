@@ -1,13 +1,12 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/no-unknown-property */
 import React, { useEffect, useRef, useState } from "react";
-import { SearchOutlined } from '@ant-design/icons';
+import { InfoCircleTwoTone, SearchOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Select, Spin } from 'antd';
-import { httpGetChangeStatus } from "../../../../api/booking";
+import { httpGetAll, httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
-import { employeeStatistics } from "../../../../api/employee";
+import { employeeStatistics, httpGetOne } from "../../../../api/employee";
 import moment from "moment";
-import { httpGetOneUser } from "../../../../api/user";
 const ListBookingByEmployee = (props) => {
     const format = 'HH';
     const { Option } = Select;
@@ -22,16 +21,15 @@ const ListBookingByEmployee = (props) => {
     const [fillterYear, setFillterYear] = useState("");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
-    const [isEmployee, setIsemployee] = useState();
+    const [employee, setEmployee] = useState();
+    const [booking, setBooking] = useState();
+
     // eslint-disable-next-line react/prop-types
-    const booking = props.dataBooking
+    // eslint-disable-next-line react/prop-types
     // eslint-disable-next-line react/prop-types
 
-    const employee = JSON.parse(localStorage.getItem('user'));
-    if (employee) {
-        console.log(employee
-        );
-    }
+    const employe = JSON.parse(localStorage.getItem('user'));
+
     // eslint-disable-next-line react/prop-types
 
     // eslint-disable-next-line react/prop-types
@@ -47,7 +45,6 @@ const ListBookingByEmployee = (props) => {
         clearFilters();
         setSearchText('');
     };
-
     const renderTime = (value) => {
         const d = new Date(value)
         let time = d.getHours();
@@ -93,7 +90,7 @@ const ListBookingByEmployee = (props) => {
             show = e.target.offsetParent.getAttribute("isshow");
         }
         // eslint-disable-next-line react/prop-types
-        booking.map(async (item) => {
+        booking?.map(async (item) => {
             if (item._id == idBooking) {
                 if (item.status == isButon
                     || show == "false"
@@ -105,7 +102,7 @@ const ListBookingByEmployee = (props) => {
         })
 
         // eslint-disable-next-line react/prop-types
-        booking.map(async (item) => {
+        booking?.map(async (item) => {
             if (item._id == idBooking) {
                 await setHandleBooking(item)
                 return
@@ -129,19 +126,23 @@ const ListBookingByEmployee = (props) => {
         if (ishandle === "3") {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 3 })
-                message.success(`Hoàn thành "${handleBooking.name}"`)
-            } catch (error) {
-                message.error(`${error.response.data.message}`)
-            }
-        } else {
-            try {
-                await httpGetChangeStatus(handleBooking._id, { status: 5 })
-
-                message.success(`Reset chờ khách hàng "${handleBooking.name}"`)
+                message.success(`Chờ thanh toán "${handleBooking.name}"`)
+                const res = await httpGetAll()
+                setBooking(res)
+                const notification = {
+                    id: handleBooking._id,
+                    notificationType: "admin",
+                    text: `Nhân viên ${user.name} đã hoàn thành đơn làm việc ${handleBooking._id}.`,
+                    from: user.id,
+                };
+                socket.emit(SocketEvent.NEWNOTIFICATION, notification);
+                socket.off(SocketEvent.NEWNOTIFICATION);
             } catch (error) {
                 message.error(`${error.response.data.message}`)
             }
         }
+        // eslint-disable-next-line react/prop-types
+
         // eslint-disable-next-line react/prop-types
         props.handleChangeStatus();
     };
@@ -399,10 +400,22 @@ const ListBookingByEmployee = (props) => {
 
     const columns = [
         {
+            title: '',
+            dataIndex: 'id',
+            key: 'id',
+            render: (item) => {
+                return (
+                    <div style={{display: "none", fontSize : "20px"}}  className={item}><InfoCircleTwoTone /></div>
+                )
+            } 
+
+        },
+        {
             title: 'Tên',
             dataIndex: 'name',
             key: 'name',
             ...getColumnSearchProps('name'),
+
         },
         {
             title: 'SĐT',
@@ -560,7 +573,7 @@ const ListBookingByEmployee = (props) => {
     let datatable = [];
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
-        if (item.employeeId?._id == isEmployee?.employeeId && item.status == 1 || item.employeeId?._id == isEmployee?.employeeId && item.status == 2 || item.employeeId?._id == isEmployee?.employeeId && item.status == 3 ) {
+        if (item.employeeId?._id == employee?._id && item.status == 1 || item.employeeId?._id == employee?._id && item.status == 4 || item.employeeId?._id == employee?._id && item.status == 3) {
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({
@@ -570,11 +583,14 @@ const ListBookingByEmployee = (props) => {
                 date: date,
                 time: time,
                 employeeId: item.employeeId?.name,
-                action: (item)
+                action: (item),
+                id: item._id
             })
         }
     })
 
+    // eslint-disable-next-line react/prop-types
+   
     const onChangeMonth = async (date, dateString) => {
         if (date == "") {
             setFillterMonth("");
@@ -582,7 +598,7 @@ const ListBookingByEmployee = (props) => {
             setLoading(true)
             const month = moment(date).format("MM")
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(isEmployee.employeeId, month, year);
+            const res = await employeeStatistics(employee?._id, month, year);
             setEmpoyeeStatic(res)
             setFillterYear("");
             setFillterMonth(dateString);
@@ -591,12 +607,13 @@ const ListBookingByEmployee = (props) => {
     }
 
     const onChangeYear = async (date, dateString) => {
+
         if (date == "") {
             setFillterYear("");
         } else {
             setLoading(true)
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(isEmployee.employeeId, undefined, year);
+            const res = await employeeStatistics(employee?._id, undefined, year);
             setEmpoyeeStatic(res)
             setFillterMonth("");
             setFillterYear(dateString);
@@ -606,18 +623,49 @@ const ListBookingByEmployee = (props) => {
 
     useEffect(() => {
         setLoading(true)
-        const getEmployee = async () => {
-            const res = await httpGetOneUser(employee.token , employee.id)
-            setIsemployee(res)
-            console.log(res);
-            const data = await employeeStatistics(res.employeeId)
+        const adminLogin = async () => {
+            let res
+            // eslint-disable-next-line react/prop-types
+            if (props.dataAdminLogin != undefined) {
+                // eslint-disable-next-line react/prop-types
+                res = await httpGetOne(props.dataAdminLogin)
+                // eslint-disable-next-line react/prop-types
+                setEmployee(res)
+            } else {
+                if (employe) {
+                    res = await httpGetOne(employe.employeeId)
+                    setEmployee(res)
+
+                }
+            }
+            const data = await employeeStatistics(res._id)
             console.log(data);
-            setEmpoyeeStatic(data) 
-            
+            const hightlight = async () => {
+                // eslint-disable-next-line react/prop-types
+             if (props.dataBookingId) {
+                 // eslint-disable-next-line react/prop-types
+                  const highlight = await document.getElementsByClassName(props.dataBookingId);
+                 console.log(highlight);
+                 if (highlight != undefined) {
+                     highlight[0].style.display = "block";
+                 }
+             }
+            }
+            hightlight()
+            setEmpoyeeStatic(data)
         }
-        getEmployee()
+        adminLogin()
+        const getBooking = async () => {
+            const res = await httpGetAll()
+            setBooking(res)
+        }
+
+        getBooking()
+          
         setLoading(false)
-    }, [])
+
+    // eslint-disable-next-line react/prop-types
+    }, [props.dataBooking])
     return <Spin Spin spinning={loading} style={{
         position: "fixed",
         top: "25%",
@@ -626,7 +674,7 @@ const ListBookingByEmployee = (props) => {
         <div className="w-full px-6 py-6 mx-auto">
             <div>
                 <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-                    Booking by {isEmployee?.name}
+                    Booking by {employee?.name}
                 </h1>
 
             </div>

@@ -19,7 +19,7 @@ const ServiceCategory = () => {
           <div key={item?._id}>
             <Link to={`/detail-booking/${item?.slug}`}>
               <a>
-                <img src={item?.image} alt="" className="m-auto" />
+                <img src={item?.image} alt="" className="m-auto" width="80%" />
                 <div className="text-center py-[10px]">
                   <button>{item?.name}</button>
                 </div>

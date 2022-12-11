@@ -1,4 +1,4 @@
-import { Button, message } from "antd";
+import { message } from "antd";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { isAuthenticate } from "../../utils/LocalStorage";
@@ -23,15 +23,8 @@ const Sidenav = () => {
           <i className="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-slate-400 xl:hidden" />
           <Link
             className="block px-8 py-6 m-0 text-sm whitespace-nowrap dark:text-white text-slate-700"
-            href="https://demos.creative-tim.com/argon-dashboard-tailwind/pages/dashboard.html"
-            target="_blank"
-            rel="noreferrer"
+            to="/"
           >
-            <img
-              src="../assets/img/logo-ct.png"
-              className="hidden h-full max-w-full transition-all duration-200 dark:inline ease-nav-brand max-h-8"
-              alt="main_logo"
-            />
             <span className="ml-1 font-semibold transition-all duration-200 ease-nav-brand">
               Thẩm mỹ viện Tuyến Spa
             </span>
@@ -148,7 +141,7 @@ const Sidenav = () => {
                     <img src="https://img.icons8.com/external-smashingstocks-isometric-smashing-stocks/55/null/external-Banner-sports-smashingstocks-isometric-smashing-stocks-2.png" />{" "}
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    Ảnh Thương hiệu
+                    Ảnh Banner
                   </span>
                 </Link>
               </li>
@@ -164,6 +157,19 @@ const Sidenav = () => {
                     Bài viết
                   </span>
                 </Link>
+                <li className="mt-0.5 w-full">
+                  <Link
+                    className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                    to="/admin/voucher"
+                  >
+                    <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                      <img src="https://img.icons8.com/external-smashingstocks-isometric-smashing-stocks/55/null/external-Banner-sports-smashingstocks-isometric-smashing-stocks-2.png" />{" "}
+                    </div>
+                    <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                      Khuyến mại
+                    </span>
+                  </Link>
+                </li>
               </li>
               <li className="w-full mt-4">
                 <h6 className="pl-6 ml-2 text-xs font-bold leading-tight uppercase dark:text-white opacity-60">

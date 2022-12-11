@@ -108,7 +108,7 @@ const Userinformation = (props) => {
           Thông tin tài khoản
         </h1>
         <div className="py-[20px] pb-5">
-          <div className="px-[20px]">
+          <div className="px-[20px] mb-5">
             <Checkbox
               checked={componentDisabled}
               onChange={(e) => setComponentDisabled(e.target.checked)}
@@ -127,7 +127,7 @@ const Userinformation = (props) => {
           >
             <Form.Item
               name="name"
-              label="Name"
+              label="Tên người dùng"
               rules={[
                 {
                   required: true,
@@ -138,27 +138,27 @@ const Userinformation = (props) => {
             </Form.Item>
             <Form.Item
               name="age"
-              label="Age"
+              label="Tuổi"
               rules={[
                 {
                   type: "number",
-                  min: 0,
+                  min: 1,
                   max: 99,
                 },
               ]}
             >
               <InputNumber />
             </Form.Item>
-            <Form.Item label="Gender" name="gender">
+            <Form.Item label="Giới tính" name="gender">
               <Select>
-                <Select.Option value={1}>Nam</Select.Option>
+                <Select.Option value={0}>Nam</Select.Option>
                 <Select.Option value={1}>Nữ</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item name="address" label="Address">
+            <Form.Item name="address" label="Địa chỉ">
               <Input />
             </Form.Item>
-            <Form.Item label="image">
+            <Form.Item label="Ảnh đại diện">
               <ImgCrop>
                 <Upload
                   customRequest={uploadImage}
@@ -172,16 +172,18 @@ const Userinformation = (props) => {
               </ImgCrop>
             </Form.Item>
 
-            <Form.Item
+           <div className="mr-[500px]">
+           <Form.Item
               wrapperCol={{
                 ...layout.wrapperCol,
                 offset: 8,
               }}
             >
               <Button type="primary" htmlType="submit">
-                Submit
+               Cập nhật
               </Button>
             </Form.Item>
+           </div>
           </Form>
         </div>
       </div>
