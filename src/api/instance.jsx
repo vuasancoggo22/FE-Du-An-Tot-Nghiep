@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://be-du-an-tot-nghiep-delta.vercel.app/api",
 });
 instance.interceptors.response.use(
   function (response) {
