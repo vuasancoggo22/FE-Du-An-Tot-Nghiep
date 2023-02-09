@@ -65,7 +65,7 @@ const DetailNews = () => {
                   {item?.title}
                 </h2>
                 <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
-                <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
+                <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c] px-4">
                   {item?.shortDescription}
                 </p>
               </Link>

@@ -11,7 +11,9 @@ const useService = () => {
     data,
     error,
     mutate
-  } = useSWR(endpoint, fetcher)
+  } = useSWR(endpoint, fetcher,{
+    refreshInterval: 2500,
+  })
   const create = async (data) => {
     const revalidate = await method.httpPost(endpoint, data);
     mutate(revalidate);

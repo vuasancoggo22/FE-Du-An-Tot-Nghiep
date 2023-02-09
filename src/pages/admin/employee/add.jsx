@@ -23,7 +23,7 @@ const AddEmployee = () => {
     console.log(data);
     var res = await httpAddEmployees(data);
     if (res._id !== undefined) {
-      message.success("Update employee success", 4);
+      message.success("Thêm nhân viên thành công !", 4);
       navigate("/admin/employee");
     }
   };
@@ -36,7 +36,7 @@ const AddEmployee = () => {
     try {
       const res = await uploadCloudinary(formData);
       onSuccess("Ok");
-      message.success("Upload successfully !");
+      message.success("Upload ảnh thành công !");
       setUrl(res.data.secure_url);
     } catch (err) {
       onError({ err });
@@ -58,10 +58,10 @@ const AddEmployee = () => {
       const accept = ["image/png", "image/jpeg", "image/jpg"];
 
       if (file.size > 1024 * 1024 * 2) {
-        message.error(`file quá lớn`);
+        message.error(`File quá lớn`);
         return Upload.LIST_IGNORE;
       } else if (!accept.includes(file.type)) {
-        message.error(`không đúng định dạng ảnh (png,jpeg,jpg)`);
+        message.error(`Không đúng định dạng ảnh (png,jpeg,jpg)`);
         return Upload.LIST_IGNORE;
       }
     },
@@ -83,7 +83,7 @@ const AddEmployee = () => {
         </div>
       </div>
 
-      <div className=" px-6 py-6 ml-[30px]  ">
+      <div className=" px-6 py-6 ml-[30px] ">
         <div className="mt-[150px] my-[20px]"></div>
         <Form
           className="m-auto"
@@ -109,7 +109,7 @@ const AddEmployee = () => {
                   },
                 ]}
               >
-                <Input type="text" />
+                <Input type="text" placeholder="Họ tên nhân viên" />
               </Form.Item>
             </Col>
           </Row>
@@ -124,30 +124,41 @@ const AddEmployee = () => {
               },
             ]}
           >
-            <Input type="text" />
+            <Input
+              type="text"
+              placeholder="Số điện thoại"
+              style={{ width: "30%" }}
+            />
           </Form.Item>
-          {/* Id Card */}
+          {/* Password */}
           <Form.Item
             label="Mật khẩu"
             name="password"
             rules={[
               {
                 required: true,
-                message: "Password không được để trống !",
+                message: "Mật khẩu không được để trống !",
               },
             ]}
           >
-            <Input type="password" />
+            <Input type="password" placeholder="Mật khẩu" />
           </Form.Item>
           {/* Id Card */}
           <Form.Item
             label="CMT/CCCD"
             name="idCard"
             rules={[
-              { required: true, message: "Card Id không được để trống !" },
+              {
+                required: true,
+                message: "Căn cước công dân không được để trống !",
+              },
             ]}
           >
-            <Input type="text" />
+            <Input
+              type="text"
+              placeholder="Căn cước công dân"
+              className="width-input width-input"
+            />
           </Form.Item>
           {/* Email */}
           <Form.Item
@@ -155,7 +166,7 @@ const AddEmployee = () => {
             name="email"
             rules={[{ required: true, message: "Email không được để trống !" }]}
           >
-            <Input type="text" />
+            <Input type="text" placeholder="Email nhân viên" />
           </Form.Item>
           {/* Gender */}
           <Form.Item
@@ -165,7 +176,7 @@ const AddEmployee = () => {
             rules={[
               {
                 required: true,
-                message: "Nhập giới tính !",
+                message: "Giới tính không để trống !",
               },
             ]}
           >
@@ -174,7 +185,7 @@ const AddEmployee = () => {
               <Option value={1}>Nữ</Option>
             </Select>
           </Form.Item>
-          {/* Avater */}
+          {/* Avatar */}
 
           <Form.Item label="Ảnh đại diện">
             <Form.Item

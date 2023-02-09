@@ -7,12 +7,15 @@ import {
   message,
   Select,
   Upload,
+  Modal
 } from "antd";
+import { useLocalStorage } from "react-use";
 import React, { useEffect, useState } from "react";
 import { getProfile, updateProfile } from "../../api/user";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import ImgCrop from "antd-img-crop";
 import { uploadCloudinary } from "../../api/upload";
+
 const layout = {
   labelCol: {
     span: 4,
@@ -36,6 +39,8 @@ const validateMessages = {
 /* eslint-enable no-template-curly-in-string */
 
 const Userinformation = (props) => {
+  const [isUpdateImg,setIsUpdateImg] = useState(true)
+  const [header, setHeader, remove] = useLocalStorage('userHeader');
   const user = isAuthenticate();
   const [form] = Form.useForm();
   const [url, setUrl] = useState("");
@@ -56,12 +61,7 @@ const Userinformation = (props) => {
     getProfiles();
   }, []);
 
-  const onSubmit = async (data) => {
-    var res = await updateProfile(user.token, data);
-    if (res._id !== undefined) {
-      message.success("Add employee success", 4);
-    }
-  };
+
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -70,11 +70,26 @@ const Userinformation = (props) => {
   const onFinish = async (data) => {
     const dataPost = { ...data, avatar: url };
     try {
-      await onSubmit(dataPost).then(() => {
-        message.success("cap nhat thành công", 4);
-      });
-      // eslint-disable-next-line react/prop-types
-      props.updateSuccess()
+      Modal.confirm({
+        title: 'Bạn có chắc chắn muốn cập nhật thông tin tài khoản không ?',
+        onOk: async () => {
+          updateProfile(user.token, dataPost).then((data) => {
+            message.success("Cập nhật thông tin tài khoản thành công.", 4);
+            const userHeader = {
+              name :data.name,
+              avatar :data.avatar
+            }
+            setHeader(userHeader)
+          })
+          .catch(error =>{
+            message.error("Không thể cập nhật tài khoản", 4)
+          })
+         
+          // eslint-disable-next-line react/prop-types
+          props.updateSuccess()
+        }
+      })
+   
     } catch (error) {
       message.error(`${error.response.data.message}`, 4);
     }
@@ -87,19 +102,17 @@ const Userinformation = (props) => {
     formData.append("file", file);
     formData.append("upload_preset", "my_upload");
     try {
+      setIsUpdateImg(false)
       const res = await uploadCloudinary(formData);
       onSuccess("Ok");
-      message.success("Upload successfully !");
-      console.log("server res: ", res);
+      message.success("Tải lên ảnh đại diện thành công !");
+      setIsUpdateImg(true)
       setUrl(res.data.secure_url);
     } catch (err) {
       onError({ err });
     }
   };
-  const [componentDisabled, setComponentDisabled] = useState(true);
-  const onFormLayoutChange = ({ disabled }) => {
-    setComponentDisabled(disabled);
-  };
+ 
 
   return (
     <>
@@ -108,20 +121,13 @@ const Userinformation = (props) => {
           Thông tin tài khoản
         </h1>
         <div className="py-[20px] pb-5">
-          <div className="px-[20px] mb-5">
-            <Checkbox
-              checked={componentDisabled}
-              onChange={(e) => setComponentDisabled(e.target.checked)}
-            >
-              Sửa Thông tin
-            </Checkbox>
-          </div>
+          
           <Form
             {...layout}
             name="nest-messages"
             onFinish={onFinish}
-            disabled={componentDisabled}
-            onValuesChange={onFormLayoutChange}
+           
+          
             validateMessages={validateMessages}
             form={form}
           >
@@ -179,9 +185,16 @@ const Userinformation = (props) => {
                 offset: 8,
               }}
             >
-              <Button type="primary" htmlType="submit">
-               Cập nhật
-              </Button>
+               {isUpdateImg   ?
+                <Button  className="bg-[#0c8747] text-white"  htmlType="submit">
+              Cập nhật tài khoản
+             </Button>
+               
+             :
+             <Button disabled className="bg-gray-500 text-white"  htmlType="submit">
+               Đang cập nhật ảnh
+             </Button>
+              }
             </Form.Item>
            </div>
           </Form>

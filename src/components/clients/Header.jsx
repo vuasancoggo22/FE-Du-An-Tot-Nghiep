@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocalStorage } from "react-use";
 import { Link } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
 import { Avatar, Dropdown, Menu, Modal } from "antd";
@@ -8,7 +9,9 @@ import { isAuthenticate } from "../../utils/LocalStorage";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import Notification from "../admin/notification";
+import { getProfile } from "../../api/user";
 const Header = () => {
+  const users = isAuthenticate();
   const navigate = useNavigate();
   const [auth, setAuth] = useState();
   const [user, setUser] = useState({});
@@ -23,6 +26,20 @@ const Header = () => {
     setIsModal(e.target.getAttribute("data"));
   };
 
+  useEffect(() => {
+    if (users) {
+      const getProfileData = () => {
+        getProfile(users.token)
+          .then((response) => {
+            setUser(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      };
+      getProfileData();
+    }
+  }, []);
   const callbackFunction = (childData) => {
     if (childData) {
       setAuth(true);
@@ -45,7 +62,6 @@ const Header = () => {
   };
 
   const handleOk = () => {
-    setModalText("The modal will be closed after two seconds");
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);
@@ -61,7 +77,6 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    console.log(1);
     localStorage.removeItem("user");
     message.success("Đăng xuất thành công!", 2);
     navigate("/");
@@ -90,7 +105,6 @@ const Header = () => {
       return null;
     }
   };
-  const users = isAuthenticate();
   const menu = (
     <Menu
       items={[
@@ -142,6 +156,9 @@ const Header = () => {
       setUser(user);
     }
   }, []);
+  const onHandleCloseModal = () => {
+    setOpen(false);
+  };
   return (
     <div className="bg-[#005E2E] ">
       <header className="h-[80px] sm:w-[1200px] max-w-full m-auto py-[4px] lg:py-[29px] justify-center">
@@ -206,11 +223,11 @@ const Header = () => {
                   className="items-center"
                 >
                   <span className="text-white whitespace-nowrap">
-                    Xin chào! {user.name}
+                    Xin chào! {user?.name}
                   </span>
                   <div className="mx-[10px]">
                     <Dropdown overlay={menu} placement="bottom">
-                      <Avatar src={user.avatar}></Avatar>
+                      <Avatar src={users?.avatar}></Avatar>
                     </Dropdown>
                   </div>
                   <div>
@@ -218,7 +235,7 @@ const Header = () => {
                       <Notification />
                     </div>
                   </div>
-                  <button className="xl:text-[15px] sm:px-2 w-[100px] lg:inline-block text-[11px] whitespace-nowrap mr-3 rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
+                  <button className="xl:text-[15px] sm:px-2 w-[100px] lg:inline-block text-[11px] whitespace-nowrap mr-3 rounded-md bg-[#003C21] hover:bg-[#024b2a] border-2 border-emerald-500 block my-1">
                     <Link className="text-[#fff]" to={`/booking`}>
                       Đặt Lịch
                     </Link>
@@ -263,7 +280,10 @@ const Header = () => {
         >
           <p>
             {ismolDal == "signin" ? (
-              <SignIn parentCallback={callbackFunction} />
+              <SignIn
+                closeModal={onHandleCloseModal}
+                parentCallback={callbackFunction}
+              />
             ) : ismolDal == "signup" ? (
               <SignUp handleSignUp={handleSignUp()} />
             ) : (

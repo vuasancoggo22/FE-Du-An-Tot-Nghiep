@@ -1,8 +1,10 @@
 import React from "react";
 import Notification from "./notification";
 import { isAuthenticate } from "../../utils/LocalStorage";
+import { useLocalStorage } from "react-use";
 const Header = () => {
-  const users = isAuthenticate();
+  
+  const [header,setHeader,remove] = useLocalStorage('userHeader')
   return (
     <>
       {/* Navbar */}
@@ -38,7 +40,7 @@ const Header = () => {
                   href=""
                   className="block px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand"
                 >
-                  <span className="hidden sm:inline">Hi {users?.name}</span>
+                  <span className="hidden sm:inline">Hi {header?.name}</span>
                 </a>
               </li>
               <li className="flex items-center pl-4 xl:hidden">

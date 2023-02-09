@@ -5,6 +5,7 @@ import "react-slideshow-image/dist/styles.css";
 import ServiceCategory from "../../components/clients/ServiceCategory";
 
 import useBanner from "../../hooks/use-banner";
+import Post from "../../components/clients/Post";
 
 const HomePage = () => {
   const { data, error } = useBanner();
@@ -45,7 +46,7 @@ const HomePage = () => {
                 </p>
                 <div className="text-center pb-[20px]">
                   <NavLink to={"/"}>
-                    <button className="rounded-md bg-[#003C21] text-[#fff] px-[15px] py-[5px]">
+                    <button className="rounded-md bg-[#0f693f] hover:bg-[#07512e] text-[#fff] px-[15px] py-[5px]">
                       Xem thêm
                     </button>
                   </NavLink>
@@ -58,7 +59,7 @@ const HomePage = () => {
 
         <div className="m-auto">
           <div className="bg-[url('https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f1-bg.jpg')]">
-            <h2 className="text-center text-lg text-[#00502b]">
+            <h2 className="text-center text-lg text-[#00502b] pt-5">
               ĐÁNH GIÁ TỪ KHÁCH HÀNG
             </h2>
             <div className="">
@@ -66,7 +67,35 @@ const HomePage = () => {
                 <div className="text-left bg-[#00502B] rounded-md border-2 border-[#EACE83]">
                   <div className="pt-[50px]">
                     <img
-                      className="m-auto rounded-full"
+                      className="m-auto rounded-full w-[40%]"
+                      src="https://gocphongcach.com/wp-content/uploads/2021/10/cach-chup-anh-chan-dung-dep-cho-nu.jpg"
+                      alt=""
+                    />
+                  </div>
+                  <div className="reputation">
+                    <img src={`../`} alt="" />
+                  </div>
+                  <div>
+                    <h5 className="text-center text-[#FFF] pt-[20px]">
+                      Nhân viên tận tình!
+                    </h5>
+                    <p className="px-[20px] text-[#FFF]">
+                      Khi đến chăm sóc và là đẹp da tại Tuyến Spa, tôi nhân thấy
+                      nhân viên phục vụ rất tận tình và chu đáo.Sẽ đến làm đẹp
+                      tại Spa tại ngày gần nhất. Mọi người hãy đến với làm đẹp
+                      tại Tuyến Spa nha.
+                    </p>
+                    <div className="text-center pb-[20px]">
+                      <h5 className="text-center text-[#FFF] pt-[20px]">
+                        Hoàng yến Chibi
+                      </h5>{" "}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-left bg-[#00502B] rounded-md border-2 border-[#EACE83]">
+                  <div className="pt-[50px]">
+                    <img
+                      className="m-auto rounded-full  w-[40%]"
                       src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/the-nao-la-mat-phuong-7-150x150.jpg"
                       alt=""
                     />
@@ -94,8 +123,8 @@ const HomePage = () => {
                 <div className="text-left bg-[#00502B] rounded-md border-2 border-[#EACE83]">
                   <div className="pt-[50px]">
                     <img
-                      className="m-auto rounded-full"
-                      src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/the-nao-la-mat-phuong-7-150x150.jpg"
+                      className="m-auto rounded-full w-[40%]"
+                      src="https://studiovietnam.com/wp-content/uploads/2021/07/chup-anh-chan-dung-troi-nang-6.jpg"
                       alt=""
                     />
                   </div>
@@ -104,45 +133,17 @@ const HomePage = () => {
                   </div>
                   <div>
                     <h5 className="text-center text-[#FFF] pt-[20px]">
-                      Dịch vụ tuyệt vời!
+                      Chế độ bảo hành
                     </h5>
                     <p className="px-[20px] text-[#FFF]">
-                      Sau khi thực hiện liệu trình Tế Bào Gốc tại Beauty, Hô cảm
-                      thấy bản thân khỏe mạnh hơn, không còn mệt mỏi, tinh thần
-                      sảng khoái nên ăn ngon, ngủ sâu. Đặc biệt, làn da trở nên
-                      sáng bóng, vô cùng mịn màng.
+                      Khi làm đẹp tại Tuyến Spa khách hàng được bảo hành 1 năm,
+                      khi không khỏi dứt điểm, bị tái trở lại sau vài tháng.
+                      Tuyến Spa sẽ bảo hành cho khách hàng đến lúc dứt điểm. Giá
+                      thành hợp lí, phù hợp túi tiền chị em.
                     </p>
                     <div className="text-center pb-[20px]">
                       <h5 className="text-center text-[#FFF] pt-[20px]">
-                        Anh Trung sky
-                      </h5>{" "}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-left bg-[#00502B] rounded-md border-2 border-[#EACE83]">
-                  <div className="pt-[50px]">
-                    <img
-                      className="m-auto rounded-full"
-                      src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/the-nao-la-mat-phuong-7-150x150.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="reputation">
-                    <img src={`../`} alt="" />
-                  </div>
-                  <div>
-                    <h5 className="text-center text-[#FFF] pt-[20px]">
-                      Dịch vụ tuyệt vời!
-                    </h5>
-                    <p className="px-[20px] text-[#FFF]">
-                      Sau khi thực hiện liệu trình Tế Bào Gốc tại Beauty, Hô cảm
-                      thấy bản thân khỏe mạnh hơn, không còn mệt mỏi, tinh thần
-                      sảng khoái nên ăn ngon, ngủ sâu. Đặc biệt, làn da trở nên
-                      sáng bóng, vô cùng mịn màng.
-                    </p>
-                    <div className="text-center pb-[20px]">
-                      <h5 className="text-center text-[#FFF] pt-[20px]">
-                        Anh Trung sky
+                        Hồ Hà Nhi
                       </h5>{" "}
                     </div>
                   </div>
@@ -158,7 +159,7 @@ const HomePage = () => {
             </h2>
             <p className="text-center text-base">
               “Reborn Tái sinh” là chương trình truyền hình thực tế về phẫu
-              thuật thẩm mỹ do Hệ thống thẩm mỹ Bệnh viện Thu Cúc tổ chức với sự
+              thuật thẩm mỹ do Hệ thống thẩm mỹ viện Tuyến Spa tổ chức với sự
               đồng hành của các chuyên gia, bác sĩ có trên 20 năm kinh nghiệm
               tạo hình thẩm mỹ và những người nổi tiếng hàng đầu tại Việt Nam.
               Chương trình tìm kiếm những thí sinh kém may mắn về ngoại hình để
@@ -167,27 +168,47 @@ const HomePage = () => {
             </p>
 
             <div className="grid grid-cols-[300px_300px_300px_300px] gap-[20px] py-[30px] ">
-              <div>
+              <div className="box-hover">
                 <img
+                  className="img-change"
                   src="https://thammythucuc.vn/wp-content/themes/thu-cuc-new/assets/images/fh3-mau2_truoc.jpg"
                   alt=""
                 />
-              </div>
-              <div>
                 <img
-                  src="https://thammythucuc.vn/wp-content/themes/thu-cuc-new/assets/images/fh3-mau1_truoc.jpg"
+                  src="https://thammythucuc.vn/wp-content/themes/thu-cuc-new/assets/images/fh3-mau2_sau.jpg"
                   alt=""
                 />
               </div>
-              <div>
+              <div className="box-hover">
                 <img
+                  className="img-change"
+                  src="https://thammythucuc.vn/wp-content/themes/thu-cuc-new/assets/images/fh3-mau1_truoc.jpg"
+                  alt=""
+                />
+                <img
+                  src="https://thammythucuc.vn/wp-content/themes/thu-cuc-new/assets/images/fh3-mau1_sau.jpg"
+                  alt=""
+                />
+              </div>
+              <div className="box-hover">
+                <img
+                  className="img-change"
                   src="https://thammythucuc.vn/wp-content/themes/thu-cuc-new/assets/images/fh3-mau2_truoc.jpg"
                   alt=""
                 />
-              </div>
-              <div>
                 <img
+                  src="https://thammythucuc.vn/wp-content/themes/thu-cuc-new/assets/images/fh3-mau2_sau.jpg"
+                  alt=""
+                />
+              </div>
+              <div className="box-hover">
+                <img
+                  className="img-change"
                   src="https://thammythucuc.vn/wp-content/themes/thu-cuc-new/assets/images/fh3-mau1_truoc.jpg"
+                  alt=""
+                />
+                <img
+                  src="https://thammythucuc.vn/wp-content/themes/thu-cuc-new/assets/images/fh3-mau1_sau.jpg"
                   alt=""
                 />
               </div>
@@ -195,197 +216,8 @@ const HomePage = () => {
           </div>
         </div>
         <div className="posttime">
-          <div className="w-[1200px] grid grid-cols-[800px_1fr] gap-[10px] m-auto py-[30px]">
-            <div>
-              <h4 className="text-center text-[#00502b] py-[20px] text-lg">
-                TIN TỨC NỔI BẬT
-              </h4>
-              <div className="grid grid-cols-[360px_1fr] gap-[10px]">
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/hut-mo-canh-tay-9.jpg"
-                    alt=""
-                    width="359px"
-                  />
-                  <h5 className="text-center text-[#00502b] py-[20px] text-base">
-                    Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-                  </h5>
-                  <p className="text-base">
-                    Cánh tay to hay bắp tay ngấn mỡ, da chùng ảnh hưởng nhiều
-                    đến thẩm
-                  </p>
-                </div>
-                <div>
-                  <div className="grid grid-cols-[100px_1fr] gap-[10px] pb-[10px]">
-                    <div>
-                      <img
-                        src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/tri-seo-loi-6.jpg"
-                        alt=""
-                        width="100px"
-                      />
-                    </div>
-                    <div>
-                      <h6 className="text-[#00502b] text-base">
-                        Trị sẹo lồi bằng laser bao nhiêu tiền?
-                      </h6>
-                      <p>
-                        Trị sẹo lồi bằng laser bao nhiêu tiền là băn khoăn của
-                        nhiều người khi
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-[100px_1fr] gap-[10px] pb-[10px]">
-                    <div>
-                      <img
-                        src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/tri-ran-da4.jpg"
-                        alt=""
-                        width="100px"
-                      />
-                    </div>
-                    <div>
-                      <h6 className="text-[#00502b] text-base">
-                        Trị sẹo lồi bằng laser bao nhiêu tiền?
-                      </h6>
-                      <p>
-                        Trị sẹo lồi bằng laser bao nhiêu tiền là băn khoăn của
-                        nhiều người khi
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-[100px_1fr] gap-[10px] pb-[10px]">
-                    <div>
-                      <img
-                        src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/mong-teo-lep.jpg"
-                        alt=""
-                        width="100px"
-                      />
-                    </div>
-                    <div>
-                      <h6 className="text-[#00502b] text-base">
-                        Trị sẹo lồi bằng laser bao nhiêu tiền?
-                      </h6>
-                      <p>
-                        Trị sẹo lồi bằng laser bao nhiêu tiền là băn khoăn của
-                        nhiều người khi
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-[100px_1fr] gap-[10px] pb-[10px]">
-                    <div>
-                      <img
-                        src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cay-mo-mong-2-1.jpg"
-                        alt=""
-                        width="100px"
-                      />
-                    </div>
-                    <div>
-                      <h6 className="text-[#00502b] text-base">
-                        Trị sẹo lồi bằng laser bao nhiêu tiền?
-                      </h6>
-                      <p>
-                        Trị sẹo lồi bằng laser bao nhiêu tiền là băn khoăn của
-                        nhiều người khi
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-center text-[#00502b] text-lg py-[20px]">
-                HỎI ĐÁP MỸ PHẨM
-              </h4>
-              <a href="">
-                {" "}
-                <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </button>
-              </a>
-              <a href="">
-                {" "}
-                <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </button>
-              </a>
-              <a href="">
-                {" "}
-                <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </button>
-              </a>
-              <a href="">
-                {" "}
-                <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </button>
-              </a>
-              <h3 className="text-center text-[#00502b] py-[20px] text-lg">
-                Tin Tức Mới
-              </h3>
-              <a href="">
-                {" "}
-                <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </button>
-              </a>
-              <a href="">
-                {" "}
-                <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </button>
-              </a>
-              <a href="">
-                {" "}
-                <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </button>
-              </a>
-            </div>
-          </div>
-          <div className="form-group-1 my-[20px] ">
-            <div className="w-[1200px] form-group grid grid-cols-[340px_340px_1fr] gap-[10px] pb-[10px] m-auto  rounded-lg bg-[#cdcbcb] py-[40px] px-[30px]">
-              <div>
-                <img
-                  src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/12/imgw_lienhe_111.png"
-                  alt=""
-                  width="340px"
-                />
-              </div>
-              <div>
-                <img
-                  src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/imgw_datlich_111.jpg"
-                  alt=""
-                  width="340px"
-                />
-              </div>
-              <div>
-                <form action="" className="formrmd ">
-                  <input
-                    type="text"
-                    className="rounded-md px-[15px] py-[15px] border-2 border-emerald-600"
-                    placeholder="Ho va ten* "
-                  />{" "}
-                  <br />
-                  <input
-                    type="number"
-                    className="rounded-md px-[15px] py-[15px] border-2 border-emerald-600"
-                    placeholder="Số điện thoai* "
-                  />{" "}
-                  <br />
-                  <p className="text-center">
-                    (Mọi thông tin của khách hàng đều được bảo mật tuyệt đối)
-                  </p>
-                  <div className="text-center">
-                    <a href="" className="text-[#00502b]">
-                      <button className=" rounded-full bg-[#FFFFFF] px-[50px] py-[5px] border-2 border-emerald-600 ">
-                        <b>Đặt Lịch</b>
-                      </button>
-                    </a>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+          <Post />
+          <div className="form-group-1 my-[20px] "></div>
         </div>
       </article>
     </>

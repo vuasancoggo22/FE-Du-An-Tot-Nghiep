@@ -15,6 +15,8 @@ const SignIn = (props) => {
   // modal forgot password
   const showModal = () => {
     setOpen(true);
+   // eslint-disable-next-line react/prop-types
+   props.closeModal(true)
   };
   const handleCancel = () => {
     setOpen(false);
@@ -45,12 +47,16 @@ const SignIn = (props) => {
     try {
       const data = await login(userValues);
       localStorage.setItem('user', JSON.stringify(data))
+      localStorage.setItem('userHeader',JSON.stringify({
+        name :data.name,
+        avatar: data.avatar
+      }))
       socket.emit("newUser",data.token);
       message.success('Đăng nhập thành công')
       navigate('/')
-     
       // eslint-disable-next-line react/prop-types
-      props.parentCallback(data);
+      props.parentCallback(data)
+      // eslint-disable-next-line react/prop-types
     } catch (error) {
       message.error(`${error.response.data.message}`, 2);
       // if(error.response.data.code == 'NEEDVERIFY'){
@@ -112,7 +118,7 @@ const SignIn = (props) => {
               >
                 <Form.Item
                   name={["phoneNumber", "phoneNumber"]}
-                  label="Phone"
+                  label="Số điện thoại"
                   rules={[
                     {
                       type: "text",
@@ -124,7 +130,7 @@ const SignIn = (props) => {
                 </Form.Item>
                 <Form.Item
                   name={["password", "password"]}
-                  label="Password"
+                  label="Mật khẩu"
                   rules={[
                     {
                       required: true,
@@ -135,10 +141,11 @@ const SignIn = (props) => {
                 </Form.Item>
 
                 <NavLink
+          
                   onClick={showModal}
-                  className="flex justify-end mr-[50px]"
+                  className="flex justify-end mr-[50px] "
                 >
-                  Forgot password?
+                 Quên mật khẩu ?
                 </NavLink>
 
                 {/* Form quên mật khẩu */}
@@ -162,7 +169,7 @@ const SignIn = (props) => {
                     onClick={() => {
                       // eslint-disable-next-line react/prop-types
                     }}
-                    type="primary"
+                    className="bg-[#0c8747] text-white"
                     htmlType="submit"
                   >
                     Đăng nhập

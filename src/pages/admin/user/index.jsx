@@ -6,32 +6,31 @@ import useUsers from "../../../hooks/use-user";
 
 const ListUser = () => {
   const { data, error } = useUsers();
-  console.log(data);
   const columns = [
     {
-      title: "Name",
+      title: "Tên",
       dataIndex: "name",
     },
 
     {
-      title: "phoneNumber",
+      title: "Số điện thoại",
       dataIndex: "phoneNumber",
     },
     {
-      title: "image",
+      title: "Ảnh nhân viên",
       dataIndex: "avatar",
-      render: (avatar) => <Image width={200} src={avatar} key={avatar} />,
+      render: (avatar) => <Image width={150} src={avatar} key={avatar} />,
     },
     {
-      title: "Address",
+      title: "Địa chỉ",
       dataIndex: "address",
     },
     {
-      title: "age",
+      title: "Tuổi",
       dataIndex: "age",
     },
     {
-      title: "gender",
+      title: "Giới tính",
       dataIndex: "gender",
       render: (gender) => {
         if (gender === 1) {
@@ -43,7 +42,7 @@ const ListUser = () => {
       },
     },
     {
-      title: "role",
+      title: "Vai trò",
       dataIndex: "role",
       render: (role) => {
         if (role === 2) {
@@ -56,7 +55,7 @@ const ListUser = () => {
       },
     },
     {
-      title: "status",
+      title: "Trạng thái",
       dataIndex: "status",
       render: (status) => {
         if (status === 1) {
@@ -81,7 +80,7 @@ const ListUser = () => {
       },
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "_id",
       key: "action",
       colapse: 2,
@@ -94,7 +93,7 @@ const ListUser = () => {
         // let BtFailureCursor;
         // let BtFailureColor = "red";
         return (
-          <div className="text-center">
+          <div className="ml-4">
             <Space size="middle">
               <Tooltip title="Sửa">
                 <Link to={`/admin/user/${item}/edit`}>

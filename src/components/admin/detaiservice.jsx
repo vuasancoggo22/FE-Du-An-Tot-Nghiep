@@ -49,6 +49,7 @@ const Description = (props) => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        className="modal-service"
       >
         <p>
           {" "}

@@ -18,3 +18,13 @@ export const userNotificationState = atom({
   key: 'userNotification',
   default : false
 })
+
+export const employeeNotificationState = atom({
+  key: 'employeeNotification',
+  default : false
+})
+
+export const employeeNotificationLengthState = atom({
+  key: 'employeeNotificationLength',
+  default : false
+})

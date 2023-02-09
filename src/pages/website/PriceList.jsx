@@ -9,7 +9,7 @@ const PriceList = () => {
   useEffect(() => {
     const getListPrice = async () => {
       const data = await httpGetAllService();
-      setListPrice(data);
+      setListPrice(data.filter((item) => item.status !== 0));
     };
     getListPrice();
   }, []);
@@ -52,19 +52,9 @@ const PriceList = () => {
               Xin cám ơn sự tin tưởng và ủng hộ của quý khách trong thời gian
               qua.
             </p>
-            <p className="text-base">Trân trọng/.</p>
-            <p className="py-[20px] font-bold text-base">
-              BẢNG GIÁ DỊCH VỤ PHẪU THUẬT THẨM MỸ
-            </p>
-            <p className="font-bold text-base">
-              (Đơn vị: 1000đ. Nhân số tiền ở cột “Giá dịch vụ” với 1.000đ để ra
-              giá niêm yết theo đơn vị VND)
-            </p>
-            <p className="pt-[20px] pb-[29px] font-bold text-base">
-              BẢNG GIÁ PHẪU THUẬT THẨM MỸ MẮT
-            </p>
+            <p className="text-base">Trân trọng.</p>
           </div>
-          <p className="ml-2 font-bold text-base">PHẪU THUẬT THẨM MỸ MẮT</p>
+          <p className="ml-2 font-bold text-base">BẢNG GIÁ DỊCH VỤ</p>
           <div className="overflow-x-auto">
             <div className="flex ">
               <h3 className="w-[15%] sm:w-[10%] bg-[#008000] text-white mr-[1px] pl-2 py-1 text-base">
@@ -83,12 +73,12 @@ const PriceList = () => {
                   className="flex ml-2 my-2 border-b-[1px] border-[#ccc]"
                   key={index}
                 >
-                  <strong className="w-[15%] sm:w-[10%] pl-2 text-base">
+                  <strong className="w-[15%] sm:w-[10%] pl-2 text-sm">
                     {index + 1}
                   </strong>
                   <Link
                     to={`/detail-booking/${item?.slug}`}
-                    className="text-black w-[70%] text-base hover:text-[#036636] font-bold"
+                    className="text-black w-[70%] text-base hover:text-[#036636] font-semibold"
                   >
                     {" "}
                     {item?.name}{" "}
@@ -104,9 +94,7 @@ const PriceList = () => {
             </ul>
           </div>
           <p className="mb-10 md:mb-0 mt-5 text-base">
-            Quý khách click vào đây để nhận được những ưu đãi mới nhất tại{" "}
-            <strong className="text-[#036636]">Tuyến Spa</strong> về dịch vụ cắt
-            mí mắt.
+            Quý khách có thể click vào từng dịch để xem chi tiết dịch vụ đó.
           </p>
         </div>
 

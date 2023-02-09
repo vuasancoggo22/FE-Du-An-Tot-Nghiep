@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import "./index.css";
@@ -40,6 +40,8 @@ import {
   notificationState,
   userNotificationLengthState,
   notificationLengthState,
+  employeeNotificationState,
+  employeeNotificationLengthState,
 } from "./recoil/notificationState";
 import { isAuthenticate } from "./utils/LocalStorage";
 const user = isAuthenticate();
@@ -54,7 +56,7 @@ export const socket = io(REALTIME_SERVER, {
     token: user?.token,
   },
 });
-
+import moment from "moment";
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
 import ListPost from "./pages/admin/post";
@@ -64,17 +66,20 @@ import ListBanner from "./pages/admin/banner";
 import AddBanner from "./pages/admin/banner/add";
 import DetailPost from "./pages/admin/post/detail";
 import EditBanner from "./pages/admin/banner/edit";
-import { message } from "antd";
-
+import { message, notification } from "antd";
+import instance from "./api/instance";
 import ChangePass from "./components/clients/ChangePass";
 import Swal from "sweetalert2";
 import ListVoucher from "./pages/admin/voucher";
 import AddVoucher from "./pages/admin/voucher/add";
 import EditVoucher from "./pages/admin/voucher/edit";
+import Bookingsuccess from "./components/clients/bookingsuccess";
+import { readedNotification } from "./api/notification";
 
 function App() {
   const [isConnected, setIsConnected] = useState(null);
-  const [notification, setNotification] = useRecoilState(notificationState);
+  const [adminNotification, setNotification] =
+    useRecoilState(notificationState);
   const [userNotification, setUserNotification] = useRecoilState(
     userNotificationState
   );
@@ -84,6 +89,12 @@ function App() {
   const [notificationLength, setNotificationLength] = useRecoilState(
     notificationLengthState
   );
+
+  const [employeeNotification, setEmployeeNotification] = useRecoilState(
+    employeeNotificationState
+  );
+  const [employeenotificationLength, setEmployeeNotificationLength] =
+    useRecoilState(employeeNotificationLengthState);
   const user = isAuthenticate();
 
   const [booking, setBooking] = useState();
@@ -92,7 +103,7 @@ function App() {
   const [countDown, setCountDown] = useState("");
   const [employeeId, setEmployeeId] = useState();
   const [bookingId, setBookingId] = useState();
-
+  const navigate = useNavigate();
   window.addEventListener("unload", () => {
     if (countDown > 0) {
       localStorage.setItem("countDown", countDown);
@@ -112,9 +123,9 @@ function App() {
     }, 1000);
   };
   const handleToEmployee = (data, bookingId) => {
-    setEmployeeId(data)
-    setBookingId(bookingId)
-  }
+    setEmployeeId(data);
+    setBookingId(bookingId);
+  };
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -126,39 +137,95 @@ function App() {
     socket.on("disconnect", () => {
       setIsConnected(false);
     });
+    socket.on("employeeNotification", (data) => {
+      setEmployeeNotification(data.notification);
+      setEmployeeNotificationLength(data.unRead);
+    });
+    socket.on("myNewEmployeeNotification", (data) => {
+      console.log(data);
+      notification.info({
+        message: `${moment(data.createdAt).fromNow()}`,
+        description: `${data.text}`,
+        duration: 15,
+        onClick: (e) => {
+          e.target.parentNode.parentNode.parentNode.style.display = "none";
+          localStorage.setItem("bookingNew", data.bookingId);
+          navigate("/admin/booking/employee");
+          readedNotification(data._id,user.token).then(response =>{
+            setEmployeeNotification(response.notification);
+            setEmployeeNotificationLength(response.unRead);
+          })
+          .catch(error =>{
+            message.error(`${error}`)
+          })
+        },
+        style: {
+          cursor: "pointer",
+        },
+      });
+    });
+    socket.on(SocketEvent.NEWNOTIFICATION, (data) => {
+      notification.info({
+        message: `${moment(data.createdAt).fromNow()}`,
+        description: `${data.text}`,
+        duration: 15,
+        onClick: (e) => {
+          e.target.parentNode.parentNode.parentNode.style.display = "none";
+          console.log(data);
+          readedNotification(data._id,user.token).then(response =>{
+            setNotification(response.notification);
+            setNotificationLength(response.unRead);
+          })
+          .catch(error =>{
+            message.error(`${error}`)
+          })
+          localStorage.setItem("bookingNew", data.bookingId);
+          navigate("/admin/booking");
+        },
+        style: {
+          cursor: "pointer",
+        },
+      });
+    });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
-      setNotification(data.notfication);
+      setNotification(data.notification);
       setNotificationLength(data.unRead);
     });
     socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
       setUserNotification(data.notification);
       setUserNotificationLength(data.unRead);
-      console.log("USERLISTNOTIFICATION", data.notification);
     });
     socket.on("myNewNotification", (data) => {
-      message.info(`${data.text}`, 20);
+      notification.info({
+        message: `${moment(data.createdAt).fromNow()}`,
+        description: `${data.text}`,
+        duration: 15,
+      });
       console.log(data);
     });
-    const getBooking = async () => {
-      const res = await httpGetAll();
+    if (user && user.role == 2) {
+      const getBooking = async () => {
+        const res = await httpGetAll();
+        setBooking(res);
+      };
+      getBooking();
+      const getEmployee = async () => {
+        const res = await httpGetEmployees();
+        setEmployees(res);
+      };
+      getEmployee();
+    }
 
-      setBooking(res);
-    };
-    getBooking();
-    const getEmployee = async () => {
-      const res = await httpGetEmployees();
-      setEmployees(res);
-    };
-    getEmployee();
     const getService = async () => {
       const res = await httpGetAllService();
       setService(res);
     };
     getService();
     return () => {
+      socket.off(SocketEvent.NEWNOTIFICATION);
       socket.off(SocketEvent.NOTIFICATION);
       socket.off(SocketEvent.USERLISTNOTIFICATION);
-      socket.off("myNewNotification");
+      socket.off("employeeNotification");
     };
   }, []);
 
@@ -195,6 +262,7 @@ function App() {
               }
             />
             <Route path="/verify" element={<VerifyPage />} />
+            <Route path="/booked-success" element={<Bookingsuccess />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
           <Route

@@ -1,67 +1,58 @@
 import instance from "./instance";
+import { isAuthenticate } from "../utils/LocalStorage";
 
-export const getEmployeeByDate = (date, id) => {
-  return instance.get(
-    `/employee/get-employee-by-date?date=${date}&employee=${id}`
-  );
-};
-export const httpAddShift = (id, data) => {
-  return instance.patch(`employees/new-employee-shift/${id}`, data);
-};
+const user = isAuthenticate();
+let header = {};
+if (user) {
+  header = {
+    headers: {
+      Authorization: `${user.token}`,
+    },
+  };
+}
 
-export const httpUpdateEmployee = (id, data) => {
-  return instance.patch(`employees/${id}`, data);
-};
 export const httpGetOne = (id) => {
-  return instance.get(`employees/${id}`);
+  return instance.get(`employees/${id}`, header);
 };
 
 export const httpGetEmployees = () => {
   return instance.get(`employees`);
 };
 export const httpAddEmployees = (data) => {
-  return instance.post(`employees`, data);
+  return instance.post(`employees`, data, header);
 };
 export const httpUpdateEmployees = (id, data) => {
-  return instance.put(`employees/${id}`, data);
+  return instance.patch(`employees/${id}`, data, header);
 };
 
-export const httpChangeStatusTimeWork = (id, date, shift, data) => {
-  return instance.patch(
-    `employees/update-employee-shift/${id}?date=${date}&shift=${shift}`,
-    data
-  );
-};
-
-export const removeEmployees = (id, data) => {
+export const removeEmployees = (id) => {
   const url = `employees/${id}`;
-  return instance.delete(url, data);
+  return instance.delete(url, header);
 };
 
 export const employeeOrderStatistics = (month, year) => {
   console.log(month, year);
-  let url
-  if(month == undefined && year == undefined) {
-    url = `employee/order-statistics`
-  }
-  else if(month != undefined && year != undefined) {
+  let url;
+  if (month == undefined && year == undefined) {
+    url = `employee/order-statistics`;
+  } else if (month != undefined && year != undefined) {
     url = `employee/order-statistics?month=${month}&year=${year}`;
-  }else if(month == undefined){
+  } else if (month == undefined) {
     url = `employee/order-statistics?year=${year}`;
   }
-  return instance.get(url);
-}
+  return instance.get(url, header);
+};
 
 export const employeeStatistics = (id, month, year) => {
   console.log(month, year);
-  let url
-  if(month == undefined && year == undefined) {
-    url = `statistics-for-employee/${id}`
-  }
-  else if(month != undefined && year != undefined) {
+ 
+  let url;
+  if (month == undefined && year == undefined) {
+    url = `statistics-for-employee/${id}`;
+  } else if (month != undefined && year != undefined) {
     url = `statistics-for-employee/${id}?month=${month}&year=${year}`;
-  }else if(month == undefined){
+  } else if (month == undefined) {
     url = `statistics-for-employee/${id}?year=${year}`;
   }
-  return instance.get(url);
-}
+  return instance.get(url, header);
+};

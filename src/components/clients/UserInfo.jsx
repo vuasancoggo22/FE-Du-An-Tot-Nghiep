@@ -56,11 +56,7 @@ const UserInfo = () => {
       "3",
       <LockOutlined />
     ),
-    getItem(
-      <Link to={`/user-setting/me`}>Cài đặt</Link>,
-      "4",
-      <SettingFilled />
-    ),
+   
   ];
   return (
     <>

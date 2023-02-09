@@ -1,3 +1,4 @@
+
 import useSWR from "swr";
 import instance from "../api/instance";
 import * as method from "../api/services";
@@ -8,7 +9,7 @@ const endpoint = "/employees";
 
 const useEmployee = () => {
   const { data, error, mutate } = useSWR(endpoint, fetcher, {
-    refreshInterval: 5000,
+    refreshInterval: 2500,
   });
   const create = async (data) => {
     const revalidate = await method.httpPost(endpoint, data);
@@ -19,8 +20,8 @@ const useEmployee = () => {
     const revalidate = data.filter((item) => item.id !== id);
     mutate(revalidate);
   };
-  const update = async (id, data) => {
-    const newData = await method.httpPut(endpoint, id, data);
+  const update = async (id, update) => {
+    const newData = await method.httpPut(endpoint, id, update);
     const revalidate = data.map((item) => (item.id == id ? newData : item));
     mutate(revalidate);
   };

@@ -55,9 +55,9 @@ const UserEdit = () => {
     });
   };
   const onFinish = async (data) => {
-    const a = { ...data, avatar: url != "" ? url : fileList[0].url };
+    const avatar = { ...data, avatar: url != "" ? url : fileList[0].url };
     try {
-      await httpUpdateOneUser(user.token, id, a).then(() => {
+      await httpUpdateOneUser(user.token, id, avatar).then(() => {
         message.success("cập nhật thành công", 4);
         navigate("/admin/user");
       });
@@ -105,7 +105,7 @@ const UserEdit = () => {
 
       <div className=" px-6 py-6 ml-[30px]  ">
         <div className="mt-[150px] my-[20px]">
-          <Link to={"/admin/user"}>
+          <Link to={"/admin/user"} className="ml-[275px]">
             <Button type="primary">Quay lại</Button>
           </Link>
         </div>
@@ -165,9 +165,9 @@ const UserEdit = () => {
                 <Option value={1}>Nam</Option>
               </Select>
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               name="role"
-              label="vai trò"
+              label="Vai trò"
               hasFeedback
               rules={[
                 {
@@ -181,7 +181,7 @@ const UserEdit = () => {
                 <Option value={1}>Nhân viên</Option>
                 <Option value={2}>Admin</Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               name="status"
               label="Trạng thái"
@@ -189,7 +189,7 @@ const UserEdit = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please select your status",
+                  message: "Không để trống trạng thái !",
                 },
               ]}
             >

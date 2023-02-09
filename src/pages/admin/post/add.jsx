@@ -127,7 +127,7 @@ const AddPost = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Tối thiểu 16 kí tự !",
+                    message: "Tối thiểu 16 kí tự và không để trống !",
                     min: 16,
                   },
                 ]}
@@ -194,7 +194,7 @@ const AddPost = () => {
             rules={[
               {
                 required: true,
-                message: "Nội dung Không được để trống !",
+                message: "Nội dung không được để trống, ít nhất 32 kí tự !",
               },
             ]}
           >

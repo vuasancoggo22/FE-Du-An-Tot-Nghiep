@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getOnePost } from "../../api/post";
+import { getPosts } from "../../api/post";
 import SideBar from "./SideBar";
 
 const News = () => {
   const { id } = useParams();
-  const [post, setPosts] = useState();
+  const [post, setPost] = useState();
+  const [posts, setPosts] = useState([]);
+  console.log(posts);
+
   useEffect(() => {
     const data = async () => {
       const res = await getOnePost(id);
-      setPosts(res);
-      console.log(res);
+      setPost(res);
     };
     data();
   }, []);
+
+  useEffect(() => {
+    const data = async () => {
+      const res = await getPosts(id);
+      setPosts(res);
+    };
+    data();
+  }, []);
+
   return (
     <section className="flex flex-col md:flex-row bg-white max-w-[1200px] mx-auto mb-8 mt-8 px-10 xl:px-0">
       <div className="w-[100%] md:w-[75%] pr-0 md:pr-10">
@@ -32,24 +44,21 @@ const News = () => {
         <div className="w-[100%]">
           <h3 className="text-xl text-[#00502b] mt-6">Tin liên quan</h3>
           <div className="flex justify-between">
-            <img
-              className="w-[270px] object-cover"
-              src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/tri-seo-loi-6.jpg"
-              alt=""
-            />
-            <img
-              className="w-[270px] object-cover"
-              src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cay-mo-mong-2-1.jpg"
-              alt=""
-            />
-            <img
-              className="w-[270px] object-cover"
-              src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/243181645_2092348744251302_1527671312089282676_n-768x768-1.jpg"
-              alt=""
-            />
+            {posts?.map((item, index) => (
+              <Link to={`/news/detail/${item?.slug}`} key={index}>
+                <img
+                  className="w-[90%] h-[200px] object-cover hover:opacity-80 px-3"
+                  src={item.thumbnail}
+                  alt=""
+                />
+                <p className="w-[85%] m-auto font-semibold text-[#00502b] hover:text-[#0e844d]">
+                  {item.title}
+                </p>
+              </Link>
+            ))}
           </div>
         </div>
-        <div>
+        {/* <div>
           <h3 className="text-xl text-[#00502b] mt-10">Trả lời </h3>
           <p className="text-base mt-2">
             Email của bạn sẽ không được hiển thị công khai. Các trường bắt buộc
@@ -101,7 +110,7 @@ const News = () => {
           <button className="bg-[#00502b] hover:bg-[#0c452b] text-xl font-semibold pt-2 pb-2 pl-4 pr-4 text-white mt-8 mb-20">
             PHẢN HỒI
           </button>
-        </div>
+        </div> */}
       </div>
       <SideBar />
     </section>

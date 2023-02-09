@@ -1,6 +1,6 @@
 import { Button, Form, Input, message } from "antd";
-import { updatePassword } from "firebase/auth";
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { updatePass } from "../../api/user";
 import { isAuthenticate } from "../../utils/LocalStorage";
 const layout = {
@@ -15,12 +15,14 @@ const layout = {
 /* eslint-disable no-template-curly-in-string */
 const validateMessages = {
   required: "${label} không được bỏ trống!",
+ 
   types: {
     number: "${label} is not a valid number!",
     phone: "${label} is not a valid number!",
   },
   number: {
     range: "${label} must be between ${min} and ${max}",
+    min : "${label} phải lớn hơn 8 kí tự.",
   },
 };
 /* eslint-enable no-template-curly-in-string */
@@ -30,17 +32,16 @@ const ChangePass = () => {
   const [form] = Form.useForm();
   useEffect(() => {}, []);
   const onSubmit = async (data) => {
-    var res = await updatePass(isUser.token, data);
-    if (res._id !== undefined) {
-      message.success("Add employee success", 4);
-    }
+    await updatePass(isUser.token, data);
+    localStorage.removeItem('user')
+    
   };
   const onFinish = async (data) => {
     console.log(data);
     const dataPost = { ...data };
     try {
       await onSubmit(dataPost).then(() => {
-        message.success("cap nhat thành công", 4);
+        message.success("Cập nhật mật khẩu thành công.", 4);
       });
       // eslint-disable-next-line react/prop-types
     } catch (error) {
@@ -65,47 +66,70 @@ const ChangePass = () => {
             <Form.Item
               {...layout}
               name="currentPassword"
-              label="Mật khẩu cũ"
+              label="Mật khẩu hiện tại"
+            
               rules={[
                 {
                   required: true,
                 },
+
               ]}
             >
-              <Input />
+              <Input.Password />
             </Form.Item>
             <Form.Item
               {...layout}
               name="newPassword"
               label="Mật khẩu mới"
+             
               rules={[
                 {
                   required: true,
+        
                 },
+                
+                  {
+                    min: 8,
+                    message: `Mật khẩu mới phải lớn hơn 8 kí tự.`
+                  }
               ]}
             >
-              <Input />
+              <Input.Password/>
             </Form.Item>
             <Form.Item
               name="confirmPassword"
+              dependencies={['newPassword']}
               label="Xác nhận mật khẩu "
               rules={[
                 {
                   required: true,
                 },
+                {
+                  min: 8,
+                  message: `Mật khẩu xác nhận phải lớn hơn 8 kí tự.`
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('newPassword') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Mật khẩu xác nhận không giống mật khẩu mới.'));
+                  },
+                }),
               ]}
             >
-              <Input />
+              <Input.Password />
             </Form.Item>
 
             <Form.Item
+            
               wrapperCol={{
                 ...layout.wrapperCol,
-                offset: 8,
+                offset: 4,
               }}
             >
-              <Button type="primary" htmlType="submit">
-                Submit
+              <Button className="mt-2 py-1 bg-[#0c8747] text-white" type="default"  htmlType="submit">
+                Cập nhật mật khẩu
               </Button>
             </Form.Item>
           </Form>

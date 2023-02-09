@@ -14,7 +14,7 @@ const EditVoucher = () => {
   const onFinish = async (data) => {
     try {
       await updateVouche(id, data).then(() => {
-        message.success("cap nhat thành công", 4);
+        message.success("Cập nhật thành công !", 4);
         navigate("/admin/voucher");
       });
     } catch (error) {
@@ -109,7 +109,7 @@ const EditVoucher = () => {
             rules={[
               {
                 required: true,
-                message: "Mã voucher không được để trống !",
+                message: "Mã voucher không được để trống, ít nhất 4 kí tự !",
               },
             ]}
           >

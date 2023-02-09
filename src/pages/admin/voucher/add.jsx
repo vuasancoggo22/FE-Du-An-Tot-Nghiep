@@ -11,7 +11,7 @@ const AddVoucher = () => {
   const onFinish = async (data) => {
     console.log(data);
     await AddVouche(data);
-    message.success("Thêm voucher thành công !");
+    message.success("Thêm thành công !");
     navigate(-1);
   };
 
@@ -79,7 +79,7 @@ const AddVoucher = () => {
             rules={[
               {
                 required: true,
-                message: "Mã voucher không được để trống !",
+                message: "Mã voucher không được để trống, ít nhất 4 kí tự !",
               },
             ]}
           >
@@ -93,7 +93,7 @@ const AddVoucher = () => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng chọn mã Voucher!",
+                message: "Vui lòng chọn loại Voucher!",
               },
             ]}
           >

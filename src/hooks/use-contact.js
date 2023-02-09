@@ -8,7 +8,7 @@ const endpoint = "/contact";
 
 const useContact = () => {
     const {data, error, mutate} = useSWR(endpoint, fetcher, {
-        refreshInterval: 5000,
+        refreshInterval: 2500,
     });
 
     const create = async (data) => {

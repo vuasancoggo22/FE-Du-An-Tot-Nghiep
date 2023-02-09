@@ -1,20 +1,17 @@
-import { Table, Image, Button, Select, Tag } from "antd";
+import { Table, Image, Button, Select, Tag, message, Modal } from "antd";
 import { Option } from "antd/lib/mentions";
 import React from "react";
-
 import { Link, useNavigate } from "react-router-dom";
-import { removeEmployees } from "../../../api/employee";
 import useEmployee from "../../../hooks/use-employee";
-import Swal from "sweetalert2";
 
 // CommonJS
 
 const ListEmployee = () => {
   const navigate = useNavigate();
-  const { data, error } = useEmployee();
+  const { data, update, error } = useEmployee();
   const columns = [
     {
-      title: "Avatar",
+      title: "Ảnh đại diện",
       dataIndex: "avatar",
       render: (image) => <Image width={100} src={image} key={image} />,
     },
@@ -29,7 +26,7 @@ const ListEmployee = () => {
     },
 
     {
-      title: "Name",
+      title: "Tên nhân viên",
       dataIndex: "name",
     },
 
@@ -38,34 +35,30 @@ const ListEmployee = () => {
       dataIndex: "email",
     },
     {
-      title: "Phone",
+      title: "Số điện thoại",
       dataIndex: "phoneNumber",
     },
     {
-      title: "status",
+      title: "Trạng thái",
       dataIndex: "status",
       render: (item) => {
         if (item === 1) {
-          return <Tag color="green">ĐÃ KÍCH HOẠT</Tag>;
+          return <Tag color="green">ĐANG LÀM VIỆC</Tag>;
         }
         if (item === 0) {
-          return <Tag color="red">CHƯA KÍCH HOẠT</Tag>;
+          return <Tag color="red">TẠM NGHỈ LÀM</Tag>;
+        }
+        if (item == 2) {
+          return <Tag color="gray">ĐÃ NGHỈ VIỆC</Tag>;
         }
       },
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "_id",
       key: "action",
       colapse: 2,
       render: (_, item) => {
-        console.log("asdasd", item);
-        // Thêm
-        // let BtSusscesCursor;
-        // let BtSusscessColor = "#3b82f6";
-        // // hủy
-        // let BtFailureCursor;
-        // let BtFailureColor = "red";
         return (
           <Select
             style={{ width: "170px", color: "blue", textAlign: "center" }}
@@ -78,20 +71,54 @@ const ListEmployee = () => {
                 type="primary"
                 style={{ border: "none", color: "white", width: "100%" }}
               >
-                Sửa
+                Sửa thông tin
               </Button>
             </Option>
-            <Option>
-              <Button
-                onClick={() => {
-                  onRemove(item._id);
-                }}
-                type="danger"
-                style={{ border: "none", color: "white", width: "100%" }}
-              >
-                Xóa
-              </Button>
-            </Option>
+            {item.status == 1 || item.status == 0 ? (
+              <Option>
+                <Button
+                  onClick={() => {
+                    onChangeStatus(item._id, 2);
+                  }}
+                  className="text-white bg-gray-500"
+                  style={{ border: "none", color: "white", width: "100%" }}
+                >
+                  Xác nhận nghỉ việc
+                </Button>
+              </Option>
+            ) : (
+              ""
+            )}
+            {item.status == 1 ? (
+              <Option>
+                <Button
+                  onClick={() => {
+                    onChangeStatus(item._id, 0);
+                  }}
+                  type="danger"
+                  style={{ border: "none", color: "white", width: "100%" }}
+                >
+                  Xác nhận tạm nghỉ
+                </Button>
+              </Option>
+            ) : (
+              ""
+            )}
+            {item.status == 0 || item.status == 2 ? (
+              <Option>
+                <Button
+                  onClick={() => {
+                    onChangeStatus(item._id, 1);
+                  }}
+                  className="text-white bg-green-500"
+                  style={{ border: "none", color: "white", width: "100%" }}
+                >
+                  Xác nhận làm trở lại
+                </Button>
+              </Option>
+            ) : (
+              ""
+            )}
           </Select>
         );
       },
@@ -100,22 +127,21 @@ const ListEmployee = () => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const onRemove = async (id) => {
-    Swal.fire({
-      title: "Bạn có chắc muốn xóa ?",
-      // text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Xóa ",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        Swal.fire("Đã xóa!", "Xóa tài khoản thành công", "success");
-        await removeEmployees(id);
-        data?.filter((item) => item._id !== id);
-      }
-    });
+  const onChangeStatus = async (id, status) => {
+    const data = {
+      status,
+    };
+    try {
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn cập nhật trạng thái nhân viên không ?",
+        onOk: async () => {
+          update(id, data);
+          message.success("Cập nhật trạng thái nhân viên thành công.", 5);
+        },
+      });
+    } catch (error) {
+      message.error(`${error.response.data.message}`, 4);
+    }
   };
   if (!data) return <div>loading</div>;
   if (error) return <div>Failed loading</div>;

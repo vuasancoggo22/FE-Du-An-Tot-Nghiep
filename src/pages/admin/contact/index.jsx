@@ -7,31 +7,31 @@ import "antd/dist/antd.css";
 
 const columns = [
   {
-    title: "Index",
+    title: "STT",
     dataIndex: "_id",
     render: (text, object, index) => {
       return index + 1;
     },
   },
   {
-    title: "Name",
+    title: "Tên",
     dataIndex: "name",
     className: "ant-descriptions-title",
   },
   {
-    title: "Phone",
+    title: "Số điện thoại",
     dataIndex: "phoneNumber",
   },
   {
-    title: "Content",
+    title: "Nội dung",
     dataIndex: "content",
   },
   {
-    title: "Address",
+    title: "Địa chỉ",
     dataIndex: "address",
   },
   {
-    title: "Action",
+    title: "Hành động",
     dataIndex: "_id",
     key: "action",
     colapse: 1,

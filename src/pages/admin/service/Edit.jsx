@@ -1,13 +1,4 @@
-import {
-  Button,
-  Form,
-  Input,
-  Upload,
-  Select,
-  message,
-  Tag,
-  InputNumber,
-} from "antd";
+import { Button, Form, Input, Upload, message, InputNumber } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { httpGetOneService } from "../../../api/services";
@@ -43,7 +34,6 @@ const modules = {
   ],
 };
 
-const { Option } = Select;
 const EditService = () => {
   const navigate = useNavigate();
   const [url, setUrl] = useState("");
@@ -184,27 +174,7 @@ const EditService = () => {
               </Upload>
             </ImgCrop>
           </Form.Item>
-          <Form.Item
-            name="status"
-            label="Trạng thái dịch vụ"
-            hasFeedback
-            rules={[
-              {
-                required: true,
-                message: "Không được để trống",
-              },
-            ]}
-          >
-            <Select placeholder="Vui lòng chọn">
-              <Option value={1}>
-                <Tag color="green">ĐANG KINH DOANH</Tag>
-              </Option>
-              <Option value={2}>
-                {" "}
-                <Tag color="red">DỪNG KINH DOANH</Tag>;
-              </Option>
-            </Select>
-          </Form.Item>
+
           <Form.Item
             name="description"
             label="Mô tả dịch vụ"

@@ -1,24 +1,24 @@
-import { Table, Image, Button, Select, Tag } from "antd";
+import { Table, Image, Button, Select, Tag, Modal, message } from "antd";
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import React from "react";
 import useService from "../../../hooks/use-service";
 import Description from "../../../components/admin/detaiservice";
 import { Link, useNavigate } from "react-router-dom";
-import { removeService } from "../../../api/service";
 import { Option } from "antd/lib/mentions";
-import Swal from "sweetalert2";
 import { formatPrice } from "../../../utils/formatCash";
+import { updateService } from "../../../api/service";
 
 const ListService = () => {
   const { data, error } = useService();
   const navigate = useNavigate();
   const columns = [
     {
-      title: "image",
+      title: "Ảnh dịch vụ",
       dataIndex: "image",
       render: (image) => <Image width={100} src={image} key={image} />,
     },
     {
-      title: "Name",
+      title: "Tên dịch vụ",
       dataIndex: "name",
       filters: [
         {
@@ -44,21 +44,20 @@ const ListService = () => {
           ],
         },
       ],
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
+     
       onFilter: (value, record) => record.name.indexOf(value) === 0,
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ["descend"],
     },
 
     {
-      title: "price",
+      title: "Giá",
       dataIndex: "price",
       render: (price) => <div className="">{formatPrice(price)}</div>,
     },
 
     {
-      title: "status",
+      title: "Trạng thái",
       dataIndex: "status",
       render: (item) => {
         if (item === 1) {
@@ -69,18 +68,18 @@ const ListService = () => {
       },
     },
     {
-      title: "description",
+      title: "Mô tả",
 
       render: (item) => {
         return (
-          <>
+          <div className="ml-8">
             <Description ondetail={item.description} />
-          </>
+          </div>
         );
       },
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "_id",
       key: "action",
       colapse: 2,
@@ -99,20 +98,31 @@ const ListService = () => {
                 type="primary"
                 style={{ border: "none", color: "white", width: "100%" }}
               >
-                Sửa
+                Sửa dịch vụ
               </Button>
             </Option>
-            <Option>
+           {item.status == 1 ?  <Option>
               <Button
                 onClick={() => {
-                  onRemove(item._id);
+                  onChangeStatus(item._id,0);
                 }}
                 type="danger"
                 style={{ border: "none", color: "white", width: "100%" }}
               >
-                Xóa
+                  Ngừng kinh doanh
               </Button>
-            </Option>
+            </Option> : ""}
+            {item.status == 0 ? <Option>
+              <Button
+                onClick={() => {
+                  onChangeStatus(item._id,1);
+                }}
+                className="text-white bg-green-500"
+                style={{ border: "none", color: "white", width: "100%" }}
+              >
+                Tiếp tục kinh doanh
+              </Button>
+            </Option> : ""}
           </Select>
         );
       },
@@ -121,27 +131,30 @@ const ListService = () => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const onRemove = async (id) => {
-    // const confirm = window.confirm("Are you sure you want to delete");
-    // if (confirm) {
-    //   await removeService(id);
-    //   data.filter((item) => item._id !== id);
-    // }
-    Swal.fire({
-      title: "Bạn có chắc muốn xóa ?",
-      // text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Xóa ",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        Swal.fire("Đã xóa!", "Xóa dịch vụ thành công", "success");
-        await removeService(id);
-        data.filter((item) => item._id !== id);
-      }
+  const onChangeStatus = (id,status) => {
+    const data = {
+      status
+    }
+    Modal.confirm({
+      title: 'Bạn có chắc chắn muốn cập nhật trạng thái dịch vụ không ?',
+      icon : <ExclamationCircleOutlined/>,
+      async onOk() {
+        try {
+          await updateService(id,data)
+          message.success('Cập nhật trạng thái dịch vụ thành công.',5)
+        } catch (error) {
+          message.error(`${error.response.data.message}`, 4)
+        }
+       
+      },
+      onCancel() {},
     });
+         
+          
+            
+        
+     
+     
   };
   if (!data) return <div>loading</div>;
   if (error) return <div>Failed loading</div>;
@@ -158,7 +171,7 @@ const ListService = () => {
         </Link>
       </div>
       <div className="w-full px-6 py-6 mx-auto">
-        <Table columns={columns} dataSource={data} onChange={onChange} />
+        <Table  columns={columns} dataSource={data} onChange={onChange} />
       </div>
       ;
     </>

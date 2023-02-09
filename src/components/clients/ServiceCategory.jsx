@@ -8,22 +8,25 @@ const ServiceCategory = () => {
   useEffect(() => {
     const service = async () => {
       const res = await httpGetAllService();
-      setService(res.filter((item) => item.status !== 2));
+      setService(res.filter((item) => item.status !== 0));
     };
     service();
   }, []);
   return (
     <>
-      <div className="grid grid-cols-[190px_190px_190px] ml-16">
+      <div className="flex flex-wrap gap-5">
         {service?.map((item) => (
-          <div key={item?._id}>
+          <div className="w-[30%] " key={item?._id}>
             <Link to={`/detail-booking/${item?.slug}`}>
-              <a>
-                <img src={item?.image} alt="" className="m-auto" width="80%" />
-                <div className="text-center py-[10px]">
-                  <button>{item?.name}</button>
-                </div>
-              </a>
+              <img
+                src={item?.image}
+                alt="Ảnh dịch vụ"
+                className="m-auto object-cover"
+                width="70%"
+              />
+              <div className="text-center py-[10px] font-semibold text-black hover:text-[#00502b] text-[15px]">
+                <button>{item?.name}</button>
+              </div>
             </Link>
           </div>
         ))}

@@ -59,10 +59,10 @@ const ServiceModal = (props) => {
                 <Descriptions.Item
                   label={<Checkbox value={item._id}></Checkbox>}
                 >
-                  {item.name}
+                  <span className="name">{item.name}</span>
                 </Descriptions.Item>
-                <Descriptions.Item label="Giá tiền">
-                  <span className="ml-1">
+                <Descriptions.Item className="price" label="Giá tiền">
+                  <span className="ml-1 price">
                     {item.price.toLocaleString("vi", {
                       style: "currency",
                       currency: "VND",

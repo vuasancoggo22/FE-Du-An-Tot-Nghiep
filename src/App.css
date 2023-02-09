@@ -1,0 +1,66 @@
+.ant-descriptions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.name {
+  color: #005e2e;
+}
+
+/* @media (min-width: 768px) {
+  .ant-form-item {
+    margin-bottom: 20px;
+  }
+} */
+.ant-form-item {
+  margin-bottom: 0;
+}
+
+.modal-service {
+  width: 1200px !important;
+}
+
+.width-input {
+  width: 70% !important;
+}
+
+.ant-form-item-control {
+  margin-left: 0;
+}
+.h-sidenav {
+  height: 100vh !important;
+}
+.apexcharts-menu-icon {
+  display: none;
+}
+.theP:first-child {
+  border-left: 1px solid #ccc;
+}
+
+/* hover image*/
+img {
+  vertical-align: middle;
+}
+.box-hover {
+  margin: 10px auto;
+  border: 1px solid #ccc;
+  height: 520px;
+  overflow: hidden;
+  position: relative;
+}
+.box-hover img {
+  max-width: 100%;
+  transition: all 1s;
+}
+
+.box-hover .img-change {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 1;
+}
+.box-hover:hover .img-change {
+  opacity: 0;
+}

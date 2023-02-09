@@ -26,12 +26,6 @@ const ListPost = () => {
   };
   const columns = [
     {
-      title: "Tiêu đề",
-      dataIndex: "title",
-      key: "title",
-      render: (text) => <a>{text}</a>,
-    },
-    {
       title: "Hình ảnh",
       dataIndex: "thumbnail",
       key: "thumbnail",
@@ -45,6 +39,13 @@ const ListPost = () => {
         );
       },
     },
+    {
+      title: "Tiêu đề",
+      dataIndex: "title",
+      key: "title",
+      render: (text) => <a>{text}</a>,
+    },
+
     {
       title: "Mô tả",
       dataIndex: "shortDescription",

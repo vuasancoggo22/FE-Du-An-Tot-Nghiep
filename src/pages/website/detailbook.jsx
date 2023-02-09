@@ -11,6 +11,8 @@ import Formcomment from "../../components/clients/comment";
 import { generateCaptcha } from "../../utils/GenerateCaptcha";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/config";
+import { socket } from "../../App";
+import { SocketEvent } from "../../utils/SocketConstant";
 const Detaibooking = (props) => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -40,13 +42,23 @@ const Detaibooking = (props) => {
       .then(async (result) => {
         console.log(result._tokenResponse.idToken);
         const token = result._tokenResponse.idToken;
-        await httpAddBooking(token, {
-          ...formData,
-          services: {serviceId: service._id, price: service.price },
-          bookingPrice: service.price,
-          status: 0
-        });
+        const response = await httpAddBooking(
+          token,
+          {
+            ...formData,
+            services: { serviceId: service._id, price: service.price },
+            bookingPrice: service.price,
+            status: 0,
+          },
+          user?.id
+        );
+        const newNotification = {
+          id: response._id,
+          type: "admin",
+          text: `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`,
+        };
         message.success("Đặt lịch thành công", 2);
+        socket.emit(SocketEvent.NEWNOTIFICATION, newNotification);
         navigate("/");
       })
       .catch((error) => {
@@ -196,10 +208,10 @@ const Detaibooking = (props) => {
   }, []);
   return (
     <>
-      <div className="bg-[url('https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cole-keister-8V1gfeaPP1Y-unsplash.jpg')] b-centerg bg-no-repeat bg-cover py-[100px] ">
+      <div className="mb-10 bg-[url('https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cole-keister-8V1gfeaPP1Y-unsplash.jpg')] b-centerg bg-no-repeat bg-cover py-[100px] ">
         <section>
           <div className="text-center text-[#FFF]">
-            <h2 className="text-[#FFF] text-[50px]">
+            <h2 className="text-[#FFF] text-[30px]">
               {" "}
               <span className="uppercase text-white font-medium">
                 {service?.name}
@@ -208,12 +220,12 @@ const Detaibooking = (props) => {
           </div>
         </section>
       </div>
-      <div className="grid grid-cols-[700px_500px] my-10 w-[1200px] gap-[10px] relative m-auto ">
-        <div>
+      <div className="flex flex-col-reverse md:flex-row max-w-[1200px] gap-[20px] mx-auto px-[20px] lg:px-0">
+        <div className="w-[100%] md:w-[50%] flex justify-center text-[16px]">
           {" "}
           <div dangerouslySetInnerHTML={{ __html: service?.description }}></div>
         </div>
-        <div className=" right-[700px]  ">
+        <div className="w-[100%] md:w-[50%]">
           <div className="border border-[#00502B] rounded-lg">
             <h3 className="text-2xl font-bold bg-[#00502B] text-white p-3 rounded-t-lg">
               Đặt lịch
@@ -333,17 +345,23 @@ const Detaibooking = (props) => {
                   {/* chọn nhân viên */}
                   <Form.Item label="Chọn nhân viên" name="employeeId">
                     <Select onChange={onChangeSelected}>
-                      {employees?.map((item, index) => (
-                        <Select.Option value={item._id} key={index}>
-                          {item.name}
-                          <div
-                            className=""
-                            // onClick={() => {
-                            //   setOpen(true);
-                            // }}
-                          ></div>
-                        </Select.Option>
-                      ))}
+                      {employees?.map((item, index) => {
+                        if (item.status == 1) {
+                          return (
+                            <Select.Option value={item._id} key={index}>
+                              {item.name}
+                              <div
+                                className=""
+                                // onClick={() => {
+                                //   setOpen(true);
+                                // }}
+                              ></div>
+                            </Select.Option>
+                          );
+                        } else {
+                          return;
+                        }
+                      })}
                     </Select>
                   </Form.Item>
                   <Form.Item
@@ -388,7 +406,7 @@ const Detaibooking = (props) => {
                   </Form.Item>
                   {/* chọn ca  */}
                   <Form.Item name="note" label="Ghi chú">
-                    <Input.TextArea />
+                    <Input.TextArea rows={4} />
                   </Form.Item>
                   <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                     <Button
@@ -409,7 +427,7 @@ const Detaibooking = (props) => {
           </div>
         </div>
       </div>
-      <div className="formcomment w-[1200px] m-auto">
+      <div className="formcomment max-w-[1200px] m-auto">
         <div className="">
           <Formcomment serviceId={service?._id} feedbackData={feedback} />
         </div>
